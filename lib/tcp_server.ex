@@ -2,6 +2,16 @@ defmodule TCPServer do
   use GenServer
   require Logger
 
+  @moduledoc """
+  This module starts a TCP server, which listens on the available ports listed in
+  the config file. As soon as the connections are open, it starts accepting
+  incoming client connections.
+  It expects to receive from user clients (those connected on the user port) an
+  id, so that it can decide for which user(s) an incoming message was intended.
+  It also expects an event source to connect on the event source port and to receive
+  data following a pre-determined pattern.
+  """
+
   def start_link(opts) do
     opts = [name: __MODULE__] |> Keyword.merge(opts)
 

@@ -1,6 +1,10 @@
 defmodule UserClientInfo do
   use GenServer
 
+  @moduledoc """
+  This module stores and manages information about the connected user clients.
+  """
+
   def start_link(opts) do
     opts = [name: __MODULE__] |> Keyword.merge(opts)
 

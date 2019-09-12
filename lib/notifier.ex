@@ -2,6 +2,12 @@ defmodule Notifier do
   use GenServer
   require Logger
 
+  @moduledoc """
+  This module is responsible for sending event notifications to connected users.
+  Because events should be sent in ascending order of event id, this module stores
+  in its genserver state the events that are out of order, until they can be sent. 
+  """
+
   def start_link(opts) do
     opts = [name: __MODULE__] |> Keyword.merge(opts)
 
@@ -109,7 +115,6 @@ defmodule Notifier do
       "S" ->
         # `Status update` event
         followers = GenServer.call(UserClientInfo, {:get_followers, from_user})
-        IO.puts "#{inspect event} - #{inspect followers}"
         Enum.each(followers, fn follower_id ->
           client = GenServer.call(UserClientInfo, {:get_client, follower_id})
           if (not is_nil(client)) do

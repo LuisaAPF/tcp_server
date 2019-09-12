@@ -105,7 +105,6 @@ defmodule UserClientInfoTest do
     test "removes a follower for a given user id", %{pid: pid, u1: u1, u2: u2, u1_id: u1_id, u2_id: u2_id, initial_state: initial_state} do
 
       assert :sys.get_state(pid) == initial_state
-      current_followers = get_in(initial_state, [:followers, u2_id])
 
       GenServer.call(pid, {:remove_follower, u2_id, u1_id})
 
