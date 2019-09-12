@@ -5,7 +5,7 @@ defmodule Notifier do
   @moduledoc """
   This module is responsible for sending event notifications to connected users.
   Because events should be sent in ascending order of event id, this module stores
-  in its genserver state the events that are out of order, until they can be sent. 
+  in its genserver state the events that are out of order, until they can be sent.
   """
 
   def start_link(opts) do
@@ -84,7 +84,7 @@ defmodule Notifier do
   Sends an event to the interested users.
   """
   defp notify(event) do
-    event_payload_regex = ~r/^(?<sequence>[[:digit:]]+)\|(?<type>[[:upper:]])\|*(?<from_user>[[:digit:]]*)\|*(?<to_user>[[:digit:]]*)\s$/
+    event_payload_regex = TCPServer.event_payload_regex()
 
     %{"type" => type, "to_user" => to_user, "from_user" => from_user}
       = Regex.named_captures(event_payload_regex, event)

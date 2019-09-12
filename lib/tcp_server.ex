@@ -67,10 +67,13 @@ defmodule TCPServer do
     end
   end
 
+  def event_payload_regex() do
+    ~r/^(?<sequence>[[:digit:]]+)\|(?<type>[[:upper:]])\|*(?<from_user>[[:digit:]]*)\|*(?<to_user>[[:digit:]]*)\s$/
+  end
+
   defp transmit_data(socket, server_port) do
     case :gen_tcp.recv(socket, 0) do
       {:ok, data} ->
-        event_payload_regex = ~r/^(?<sequence>[[:digit:]]+)\|(?<type>[[:upper:]])\|*(?<from_user>[[:digit:]]*)\|*(?<to_user>[[:digit:]]*)\s$/
         user_payload_regex = ~r/^(?<id>[[:digit:]]+)\s$/
 
         cond do
@@ -81,8 +84,8 @@ defmodule TCPServer do
             GenServer.call(UserClientInfo, {:add_client, socket, id})
 
           # An event payload was received on the event source port
-          server_port == available_ports()[:event_source] && Regex.match?(event_payload_regex, data) ->
-            %{"sequence" => sequence} = Regex.named_captures(event_payload_regex, data)
+          server_port == available_ports()[:event_source] && Regex.match?(event_payload_regex(), data) ->
+            %{"sequence" => sequence} = Regex.named_captures(event_payload_regex(), data)
             # Let the Notifier module manage it.
             :ok = GenServer.call(Notifier, {:new_event, data, String.to_integer(sequence)})
 
