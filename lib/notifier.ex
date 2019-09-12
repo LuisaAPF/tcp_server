@@ -94,14 +94,14 @@ defmodule Notifier do
         # `Broadcast` event
         clients = GenServer.call(UserClientInfo, :get_all_clients)
         Enum.each(clients, fn client ->
-          :ok = :gen_tcp.send client, event
+          :gen_tcp.send client, event
         end)
 
       "F" ->
         # `Follow` event
         client = GenServer.call(UserClientInfo, {:get_client, to_user})
         if (not is_nil(client)) do
-          :ok = :gen_tcp.send client, event
+          :gen_tcp.send client, event
         end
         :ok = GenServer.call(UserClientInfo, {:add_follower, to_user, from_user})
 
@@ -109,7 +109,7 @@ defmodule Notifier do
         # `Private message` event
         client = GenServer.call(UserClientInfo, {:get_client, to_user})
         if (not is_nil(client)) do
-          :ok = :gen_tcp.send client, event
+          :gen_tcp.send client, event
         end
 
       "S" ->
@@ -118,7 +118,7 @@ defmodule Notifier do
         Enum.each(followers, fn follower_id ->
           client = GenServer.call(UserClientInfo, {:get_client, follower_id})
           if (not is_nil(client)) do
-            :ok = :gen_tcp.send client, event
+            :gen_tcp.send client, event
           end
         end)
 
