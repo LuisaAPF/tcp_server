@@ -50,7 +50,7 @@ events **in the correct order**, regardless of the order in which the
 *event source* sent them.
 
 ## Running the program
-To this program, you need an environment with Elixir (was developed using Elixir 1.9.1).
+To run this program, you need an environment with Elixir (was developed using Elixir 1.9.1).
 From the command line, run
 
 ```
